@@ -1,0 +1,143 @@
+1
+Landing in progress
+X=2500m, Y=2699m, HSpeed=0m/s VSpeed=-3m/s
+Fuel=549l, Angle=-15°, Power=1 (1.0m/s2)
+2
+Landing in progress
+X=2501m, Y=2695m, HSpeed=1m/s VSpeed=-5m/s
+Fuel=549l, Angle=-15°, Power=1 (1.0m/s2)
+3
+Landing in progress
+X=2501m, Y=2688m, HSpeed=1m/s VSpeed=-8m/s
+Fuel=549l, Angle=-15°, Power=1 (1.0m/s2)
+4
+Landing in progress
+X=2502m, Y=2678m, HSpeed=1m/s VSpeed=-11m/s
+Fuel=549l, Angle=-15°, Power=1 (1.0m/s2)
+5
+Landing in progress
+X=2503m, Y=2666m, HSpeed=1m/s VSpeed=-14m/s
+Fuel=549l, Angle=-15°, Power=1 (1.0m/s2)
+6
+Landing in progress
+X=2505m, Y=2651m, HSpeed=2m/s VSpeed=-16m/s
+Fuel=549l, Angle=-15°, Power=1 (1.0m/s2)
+7
+Landing in progress
+X=2506m, Y=2633m, HSpeed=2m/s VSpeed=-19m/s
+Fuel=549l, Angle=-15°, Power=1 (1.0m/s2)
+8
+Landing in progress
+X=2508m, Y=2612m, HSpeed=2m/s VSpeed=-22m/s
+Fuel=549l, Angle=-15°, Power=1 (1.0m/s2)
+9
+Landing in progress
+X=2510m, Y=2589m, HSpeed=2m/s VSpeed=-25m/s
+Fuel=549l, Angle=-15°, Power=1 (1.0m/s2)
+10
+Landing in progress
+X=2513m, Y=2563m, HSpeed=3m/s VSpeed=-27m/s
+Fuel=549l, Angle=-15°, Power=1 (1.0m/s2)
+11
+Landing in progress
+X=2516m, Y=2534m, HSpeed=3m/s VSpeed=-30m/s
+Fuel=549l, Angle=-15°, Power=1 (1.0m/s2)
+12
+Landing in progress
+X=2519m, Y=2502m, HSpeed=3m/s VSpeed=-33m/s
+Fuel=549l, Angle=-15°, Power=1 (1.0m/s2)
+13
+Landing in progress
+X=2522m, Y=2468m, HSpeed=3m/s VSpeed=-36m/s
+Fuel=549l, Angle=-15°, Power=1 (1.0m/s2)
+14
+Landing in progress
+X=2525m, Y=2431m, HSpeed=4m/s VSpeed=-38m/s
+Fuel=549l, Angle=-15°, Power=1 (1.0m/s2)
+15
+Landing in progress
+X=2529m, Y=2391m, HSpeed=4m/s VSpeed=-41m/s
+Fuel=549l, Angle=-15°, Power=1 (1.0m/s2)
+16
+Landing in progress
+X=2533m, Y=2349m, HSpeed=4m/s VSpeed=-44m/s
+Fuel=549l, Angle=-15°, Power=1 (1.0m/s2)
+17
+Landing in progress
+X=2537m, Y=2303m, HSpeed=4m/s VSpeed=-47m/s
+Fuel=549l, Angle=-15°, Power=1 (1.0m/s2)
+18
+Landing in progress
+X=2542m, Y=2255m, HSpeed=5m/s VSpeed=-49m/s
+Fuel=549l, Angle=-15°, Power=1 (1.0m/s2)
+19
+Landing in progress
+X=2547m, Y=2205m, HSpeed=5m/s VSpeed=-52m/s
+Fuel=549l, Angle=-15°, Power=1 (1.0m/s2)
+20
+Landing in progress
+X=2552m, Y=2151m, HSpeed=5m/s VSpeed=-55m/s
+Fuel=549l, Angle=-15°, Power=1 (1.0m/s2)
+21
+Landing in progress
+X=2557m, Y=2095m, HSpeed=5m/s VSpeed=-58m/s
+Fuel=549l, Angle=-15°, Power=1 (1.0m/s2)
+22
+Landing in progress
+X=2563m, Y=2036m, HSpeed=6m/s VSpeed=-60m/s
+Fuel=549l, Angle=-15°, Power=1 (1.0m/s2)
+23
+Landing in progress
+X=2568m, Y=1974m, HSpeed=6m/s VSpeed=-63m/s
+Fuel=549l, Angle=-15°, Power=1 (1.0m/s2)
+24
+Landing in progress
+X=2575m, Y=1909m, HSpeed=6m/s VSpeed=-66m/s
+Fuel=549l, Angle=-15°, Power=1 (1.0m/s2)
+25
+Landing in progress
+X=2581m, Y=1842m, HSpeed=6m/s VSpeed=-69m/s
+Fuel=549l, Angle=-15°, Power=1 (1.0m/s2)
+26
+Landing in progress
+X=2587m, Y=1772m, HSpeed=7m/s VSpeed=-71m/s
+Fuel=549l, Angle=-15°, Power=1 (1.0m/s2)
+27
+Landing in progress
+X=2594m, Y=1699m, HSpeed=7m/s VSpeed=-74m/s
+Fuel=549l, Angle=-15°, Power=1 (1.0m/s2)
+28
+Landing in progress
+X=2601m, Y=1624m, HSpeed=7m/s VSpeed=-77m/s
+Fuel=549l, Angle=-15°, Power=1 (1.0m/s2)
+29
+Landing in progress
+X=2609m, Y=1546m, HSpeed=8m/s VSpeed=-80m/s
+Fuel=549l, Angle=-15°, Power=1 (1.0m/s2)
+30
+Landing in progress
+X=2616m, Y=1465m, HSpeed=8m/s VSpeed=-82m/s
+Fuel=549l, Angle=-15°, Power=1 (1.0m/s2)
+31
+Landing in progress
+X=2624m, Y=1381m, HSpeed=8m/s VSpeed=-85m/s
+Fuel=549l, Angle=-15°, Power=1 (1.0m/s2)
+32
+Landing in progress
+X=2633m, Y=1295m, HSpeed=8m/s VSpeed=-88m/s
+Fuel=549l, Angle=-15°, Power=1 (1.0m/s2)
+33
+Landing in progress
+X=2641m, Y=1205m, HSpeed=9m/s VSpeed=-91m/s
+Fuel=549l, Angle=-15°, Power=1 (1.0m/s2)
+34
+Landing in progress
+X=2650m, Y=1113m, HSpeed=9m/s VSpeed=-93m/s
+Fuel=549l, Angle=-15°, Power=1 (1.0m/s2)
+35
+Landing in progress
+X=2659m, Y=1019m, HSpeed=9m/s VSpeed=-96m/s
+Fuel=549l, Angle=-15°, Power=1 (1.0m/s2)
+36
+Landing in progress
+X=2668m, Y=921m, HSpe...

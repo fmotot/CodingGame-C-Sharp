@@ -1,0 +1,433 @@
+<?php
+function affine($x1,$y1,$x2,$y2)
+{
+    $aNum = $y2 - $y1;
+    $aDen = $x2 - $x1;
+    $b = $y1 - $aNum * $x1 / $aDen;
+    
+    if ($aDen < 0)
+    {
+        $aNum = -$aNum;
+        $aDen = -$aDen;
+    }
+        
+    return array(
+        'aNum'  => $aNum,
+        'aDen'  => $aDen,
+        'b'     => $b
+        );
+}
+
+class PID
+{
+	private $_errorX = 0;
+	private $_lastErrorX = 0;
+	private $_sumErrorsX = 0;
+	
+	private $_errorY = 0;
+	private $_lastErrorY = 0;
+	private $_sumErrorsY = 0;
+	
+	private $_t = 1;
+
+	private $_Kp = 0.4;
+	private $_Ki = 0.3;
+	private $_Kd = 60;
+	
+	private $_commandX;
+	private $_commandY;
+	
+	public function __construct()
+	{
+	    
+	}
+
+	public function setCommand($x0, $xf, $y0, $yf)
+	{
+		$this->_errorX = $xf - $x0;
+		$this->_errorY = $yf - $y0;
+		
+		$this->_sumErrorsX += $this->_errorX;
+		$this->_sumErrorsY += $this->_errorY;
+		
+		if ($this->_lastErrorX != 0)
+		    $deltaErrorX = $this->_errorX - $this->_lastErrorX;
+		if ($this->_lastErrorY != 0)
+		    $deltaErrorY = $this->_errorY - $this->_lastErrorY;
+		    
+		$this->_commandX = $this->_Kp * $this->_errorX 
+		   + $this->_Ki * $this->_sumErrorsX / $this->_t 
+		   + $this->_Kd * $deltaErrorX
+		  ;
+		  
+		$this->_commandY = $this->_Kp * $this->_errorY 
+		   + $this->_Ki * $this->_sumErrorsY / $this->_t 
+		   + $this->_Kd * $deltaErrorY
+		  ;
+		  
+	 	$this->_lastErrorX = $this->_errorX;
+	 	$this->_lastErrorY = $this->_errorY;
+	 	$this->_t++;
+	}
+	
+	public function getCommandX()
+	{
+	    return $this->_commandX;
+	}
+	
+	public function getCommandY()
+	{
+	    return $this->_commandY;
+	}
+}
+
+class Module
+{
+    private $_x;
+    private $_y;
+    private $_hSpeed;
+    private $_vSpeed;
+    private $_fuel;
+    private $_rotate;
+    private $_power;
+    private $_a = -3.711;
+    private $_PID ;
+    private $_landingX;
+    private $_landingY;
+    private $_hSpeedMax = 40;
+    
+    public function __construct($landingZone)
+    {
+        $this->_landingX = $landingZone['x'];
+        $this->_landingY = $landingZone['y'];
+        $this->_PID = new PID();
+        
+        error_log(var_export($this->_landingX, true));
+        error_log(var_export($this->_landingY, true));
+    }
+
+    /**
+     * @param array
+     *
+     * @return self
+     */
+    public function setAll($x, $y, $hSpeed, $vSpeed, $fuel, $rotate, $power)
+    {
+        $this->_x = $x;
+        $this->_y = $y;
+        $this->_hSpeed = $hSpeed;
+        $this->_vSpeed = $vSpeed;
+        $this->_fuel = $fuel;
+        $this->_rotate = $rotate;
+        $this->_power = $power;
+        $this->_PID->setCommand($this->_x, $this->_landingX, $this->_y, $this->_landingY);
+
+        return $this;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getX()
+    {
+        return $this->_x;
+    }
+
+    /**
+     * @param mixed $_x
+     *
+     * @return self
+     */
+    public function setX($_x)
+    {
+        $this->_x = $_x;
+
+        return $this;
+    }
+    
+    /**
+     * @return mixed
+     */
+    public function getY()
+    {
+        return $this->_y;
+    }
+
+    /**
+     * @param mixed $_y
+     *
+     * @return self
+     */
+    public function setY0($_y)
+    {
+        $this->_y = $_y;
+
+        return $this;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getHSpeed()
+    {
+        return $this->_hSpeed;
+    }
+
+    /**
+     * @param mixed $_hSpeed
+     *
+     * @return self
+     */
+    public function setHSpeed($_hSpeed)
+    {
+        $this->_hSpeed = $_hSpeed;
+
+        return $this;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getVSpeed()
+    {
+        return $this->_vSpeed;
+    }
+
+    /**
+     * @param mixed $_vSpeed
+     *
+     * @return self
+     */
+    public function setVSpeed($_vSpeed)
+    {
+        $this->_vSpeed = $_vSpeed;
+
+        return $this;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getFuel()
+    {
+        return $this->_fuel;
+    }
+
+    /**
+     * @param mixed $_fuel
+     *
+     * @return self
+     */
+    public function setFuel($_fuel)
+    {
+        $this->_fuel = $_fuel;
+
+        return $this;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getRotate()
+    {
+        return $this->_rotate;
+    }
+
+    /**
+     * @param mixed $_rotate
+     *
+     * @return self
+     */
+    public function setRotate($_rotate)
+    {
+        $this->_rotate = $_rotate;
+
+        return $this;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getPower()
+    {
+        return $this->_power;
+    }
+
+    /**
+     * @param mixed $_power
+     *
+     * @return self
+     */
+    public function setPower($_power)
+    {
+        $this->_power = $_power;
+
+        return $this;
+    }
+    
+    public function getT1($rotate, $power)
+    {
+    	if ( $power > $this->_power)
+	    {
+	        $power1 = $this->_power <= 3 ? $this->_power + 1: $this->_power;
+	    }
+	    else if ($power < $$this->_power)
+	    {
+	        $power1 = $this->_power >= 1 ? $this->_power - 1: $this->_power;
+	    }
+	    else
+	    {
+	        $power1 = $this->_power;
+	    }
+	    
+	    if ( $rotate > $this->_rotate)
+	    {
+	        $rotate1 = $this->_rotate + min(45 - $this->_rotate, $rotate - $this->_rotate, 15);
+	    }
+	    else if ($rotate < $this->_rotate)
+	    {
+	        $rotate1 = $this->_rotate + max(-45 - $this->_rotate, $rotate - $this->_rotate, -15);
+	    }
+	    else
+	    {
+	        $rotate1 = $this->_rotate;
+	    }
+	    
+	    $fuel1 = $this->_fuel - $power1;
+	    
+	    // calcul des radians
+	    $rad = deg2rad(90 + $rotate1);
+	    
+	    $x1 = $this->_x + $this->_hSpeed + cos($rad)*$power1/2;
+	    $hSpeed1 = $this->_hSpeed + cos($rad)*$power1;
+	    $y1 = $this->_y + $this->_vSpeed + (sin($rad)*$power1 + $this->_a)/2;
+	    $vSpeed1 = $this->_vSpeed + sin($rad)*$power1 + $this->_a;
+
+	    return array($x1, $y1, $hSpeed1, $vSpeed1, $fuel1, $rotate1, $power1);
+    }
+
+    public function displayCommand()
+    {
+    	error_log(var_export($this->_PID->getCommandX(),true));
+    }
+    
+    public function getParams()
+    {
+        $comX = $this->_PID->getCommandX()>0 ? min($this->_PID->getCommandX(),900) : max($this->_PID->getCommandX(),-900);
+        $comY = $this->_PID->getCommandY()>0 ? min($this->_PID->getCommandY(),900) : max($this->_PID->getCommandY(),-900);
+        
+        error_log(var_export("command x",true));
+        error_log(var_export($comX,true));
+        error_log(var_export("command y",true));
+        error_log(var_export($comY,true));
+        error_log(var_export("power",true));
+        
+        $pow = 4;
+        $rad = acos(0.02 * $comX/ ($pow * 10));
+        
+        
+        
+        $deg = round(rad2deg($rad)) - 90;
+        
+        error_log(var_export($deg,true));
+        
+        if ($deg < -45)
+            $deg = -45;
+        if ($deg > 45)
+            $deg = 45;
+        
+        // si à plus de 200m du sol
+        if ($this->_vSpeed > -10)
+            $pow = 3;
+            
+        if ($this->_y - $this->_landingY > 300)
+        {
+            
+            if ((abs($this->_x - $this->_landingX) / abs($this->_y - $this->_landingY) < 0.4 or $comX / $comy < 0.2) and abs($this->_hSpeed) < 15 )
+            {
+                error_log(var_export("Passage sur Y",true));
+                
+                $deg = $deg > 0 ? $deg-- : $deg++ ;
+                
+                if (abs($this->_vSpeed) < 34)
+                {
+                    error_log(var_export("vSpeed " . $this->_vSpeed . " < 30 donc power 0",true));    
+                    $pow = 1;
+                }
+                else
+                {
+                    $pow = 4;
+                }
+            }
+        } 
+        else
+        {
+            $deg = round($deg / 1.5);
+            if ($this->_y - $this->_landingY < 50)
+                $deg = 0;
+            
+            $pow = abs($this->_vSpeed) < 35 ? 3 : 4;
+            if ((abs($this->_x - $this->_landingX) / abs($this->_y - $this->_landingY) > 2 and $this->_vSpeed < 0))
+            {
+                $pow = abs($this->_x - $this->_landingX) < 500 ? 2 : 4;
+            }
+                            
+        }
+        
+        
+        
+        error_log(var_export("rotate : " . $deg . "°, power : $pow",true));  
+        
+        return array($deg,$pow);
+    }
+}
+
+
+
+// $surfaceN: the number of points used to draw the surface of Mars.
+fscanf(STDIN, "%d", $surfaceN);
+for ($i = 0; $i < $surfaceN; $i++)
+{
+    // $landX: X coordinate of a surface point. (0 to 6999)
+    // $landY: Y coordinate of a surface point. By linking all the points together in a sequential fashion, you form the surface of Mars.
+    fscanf(STDIN, "%d %d", $landX, $landY);
+    $surface[$i]['x'] = $landX;
+    $surface[$i]['y'] = $landY;
+    
+    if ($i > 0)
+        $surface[$i - 1]['affine'] = affine($surface[$i - 1]['x'], $surface[$i - 1]['y'], $surface[$i]['x'], $surface[$i]['y']);
+}
+
+$landingZone = null;
+for ($i = 1; $i < $surfaceN; $i++)
+{
+    if ($surface[$i]['y'] == $surface[$i - 1]['y'] and $surface[$i]['x'] - $surface[$i - 1]['x'] >= 1000)
+    {
+        $landingZone['x'] = round(($surface[$i]['x'] + $surface[$i - 1]['x']) /2);
+        $landingZone['y'] = $surface[$i]['y'];
+    }
+}
+
+$module = new Module($landingZone);
+
+// game loop
+while (TRUE)
+{
+    // $hSpeed: the horizontal speed (in m/s), can be negative.
+    // $vSpeed: the vertical speed (in m/s), can be negative.
+    // $fuel: the quantity of remaining fuel in liters.
+    // $rotate: the rotation angle in degrees (-90 to 90).
+    // $power: the thrust power (0 to 4).
+    fscanf(STDIN, "%d %d %d %d %d %d %d", $X, $Y, $hSpeed, $vSpeed, $fuel, $rotate, $power);
+
+    $module->setAll($X, $Y, $hSpeed, $vSpeed, $fuel, $rotate, $power);
+    // $module->displayCommand();
+    
+    // Write an action using echo(). DON'T FORGET THE TRAILING \n
+    // To debug (equivalent to var_dump): error_log(var_export($var, true));
+
+    $params = $module->getParams();
+    // rotate power. rotate is the desired rotation angle. power is the desired thrust power.
+    echo($params[0] . " " . $params[1] . "\n");
+}
+?>
