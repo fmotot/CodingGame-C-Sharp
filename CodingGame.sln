@@ -5,6 +5,12 @@ VisualStudioVersion = 16.0.29709.97
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MarsLander2", "MarsLander2\MarsLander2.csproj", "{89638596-F4DB-4DE0-A259-A9D5F3227727}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{913B8428-E7BC-4D12-9264-19E9A22569CA}"
+	ProjectSection(SolutionItems) = preProject
+		log.txt = log.txt
+		php.txt = php.txt
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU

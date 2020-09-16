@@ -4,21 +4,23 @@ using System.IO;
 using System.Text;
 using System.Collections;
 using System.Collections.Generic;
-
-
+using System.Data;
+using System.CodeDom;
 
 /** * Auto-generated code below aims at helping you parse * the standard input according to the problem statement. **/
 class Player
 {
+    public static Land land;
     static void Main(string[] args)
     {
+        land = new Land();
         string[] inputs; int surfaceN = int.Parse(Console.ReadLine()); // the number of points used to draw the surface of Mars.        
         for (int i = 0; i < surfaceN; i++)
         {
             inputs = Console.ReadLine().Split(' ');
-            int landX = int.Parse(inputs[0]); // X coordinate of a surface point. (0 to 6999)
-            int landY = int.Parse(inputs[1]); // Y coordinate of a surface point. By linking all the points together in a sequential fashion, you form the surface of Mars.
-
+            //int landX = int.Parse(inputs[0]); // X coordinate of a surface point. (0 to 6999)
+            //int landY = int.Parse(inputs[1]); // Y coordinate of a surface point. By linking all the points together in a sequential fashion, you form the surface of Mars.
+            land.Add(new Point(int.Parse(inputs[0]), int.Parse(inputs[1])));
         }
 
         double modhSpeed = 0;
@@ -55,7 +57,7 @@ class Player
             // Write an action using Console.WriteLine()            
             // To debug: Console.Error.WriteLine("Debug messages...");         
 
-            modRotate = GetNextRotate(rotate, gene.Rotate) ;
+            modRotate = GetNextRotate(rotate, gene.Rotate);
             modPower = GetNextPower(power, gene.Power);
             double modRad = (System.Math.PI / 180) * (90 + modRotate);
 
@@ -116,25 +118,86 @@ class Player
 
 class Land
 {
-    public static double G = -3.711;
+    public const double G = -3.711;
 
-    private List<int> surface;
+    public List<Point> Surface { get; set; }
 
-    public List<int> Surface
+    public Land()
     {
-        get { return surface; }
-        set { surface = value; }
+        Surface = new List<Point>();
+    }
+    public void Add(Point landPoint)
+    {
+        Surface.Add(landPoint);
+    }
+}
+
+class Point
+{
+    public double X { get; set; }
+    public double Y { get; set; }
+    public Point(double x, double y)
+    {
+        X = x;
+        Y = y;
+    }
+}
+
+class Collision
+{
+    public Point Point { get; set; }
+    public Collision(Point p1, Point p2, Land land)
+    {
+        int l = 0;
+
+        while (!State && l < land.Surface.Count - 1)
+        {
+            Point s1 = land.Surface.ElementAt(l);
+            Point s2 = land.Surface.ElementAt(l + 1);
+
+            if ((s1.X < p1.X && p1.X < s2.X)
+                || (s1.X < p2.X && p2.X < s2.X))
+            {
+                Point intersection = Intersection(p1, p2, s1, s2);
+                if (Math.Min(p1.X, p2.X) <= intersection.X && intersection.X <= Math.Max(p1.X, p2.X))
+                {
+                    Point = intersection;
+                    State = true;
+                }
+            }
+
+            l++;
+        }
     }
 
+    public bool State { get; private set; }
 
+    private Tuple<double, double> Affine(Point p1, Point p2)
+    {
+        double a = (p2.Y - p1.Y) / (p2.X - p1.X);
+        double b = p1.Y - a * p1.X;
+
+        return new Tuple<double, double>(a, b);
+    }
+
+    private Point Intersection(Point p1, Point p2, Point q1, Point q2)
+    {
+        Tuple<double, double> line1 = Affine(p1, p2);
+        Tuple<double, double> line2 = Affine(q1, q2);
+
+        double x = (line2.Item2 - line1.Item2) / (line1.Item1 - line2.Item1);
+        double y = line1.Item1 * x + line1.Item2;
+
+        return new Point(x, y);
+    }
 }
 
 class Module
 {
-    public static int MAX_ROTATE = 45;
-    public static int MIN_ROTATE = -45;
-    public static int MAX_POWER = 4;
-    public static int MIN_POWER = 0;
+    public const int MAX_ROTATE = 45;
+    public const int MIN_ROTATE = -45;
+    public const int MAX_POWER = 4;
+    public const int MIN_POWER = 0;
     public int Power { get; set; }
     public int Rotate { get; set; }
 
@@ -144,34 +207,82 @@ class Module
     public double Y { get; set; }
 }
 
-
 class Chromosome
 {
-    private List<Gene> genes;
+    public const int NB_GENE = 150;
+    public const int MUTATION = 5; // Proba de mutation en %
+    public List<Gene> Genes { get; set; }
 
+    /// <summary>
+    /// doit prendre en compte:
+    /// - la distance avec la zone d'atterissage
+    /// - la vitesse à la collision
+    /// - l'angle à la collision
+    /// 
+    /// </summary>
+    public double Score
+    {
+        get
+        {
+
+        } 
+    }
+
+    /// <summary>
+    /// Création d'un chromosome de base
+    /// </summary>
     public Chromosome()
     {
-        genes = new List<Gene>();
+        Genes = new List<Gene>();
+
+        int nbGene = 0;
+
+        while(nbGene < NB_GENE)
+        {
+            this.addGene(new Gene());
+            nbGene++;
+        }
     }
 
-    public List<Gene> Genes
+    /// <summary>
+    /// Croisement de 2 chromosomes
+    /// </summary>
+    /// <param name="mother">
+    /// Parent 1
+    /// </param>
+    /// <param name="father">
+    /// Parent 2
+    /// </param>
+    public Chromosome(Chromosome mother, Chromosome father)
     {
-        get { return genes; }
-        set { genes = value; }
+        Genes = new List<Gene>();
+
+        Genes.AddRange(mother.Genes.GetRange(0, mother.Genes.Count / 2));
+        Genes.AddRange(father.Genes.GetRange(mother.Genes.Count / 2, father.Genes.Count / 2));
     }
+
+    public void mutate()
+    {
+        Random rand = new Random();
+        if (rand.Next(0,100) < MUTATION)
+        {
+            Genes[rand.Next(0, Genes.Count)] = new Gene();
+        }
+    }
+
 
     public void addGene(Gene gene)
     {
-        genes.Add(gene);
+        Genes.Add(gene);
     }
 }
 
 class Gene
 {
-    public static int MAX_ROTATE = 15;
-    public static int MIN_ROTATE = -16;
-    public static int MAX_POWER = 2;
-    public static int MIN_POWER = -1;
+    public const int MAX_ROTATE = 15;
+    public const int MIN_ROTATE = -16;
+    public const int MAX_POWER = 2;
+    public const int MIN_POWER = -1;
     public int Rotate { get; set; }
     public int Power { get; set; }
 
@@ -184,7 +295,7 @@ class Gene
 
     public override string ToString()
     {
-        return String.Format("rotate = {0}, power = {1}", Rotate, Power) ;
+        return String.Format("rotate = {0}, power = {1}", Rotate, Power);
     }
 }
 
