@@ -49,9 +49,6 @@ class Player
             }
             loop++;
 
-            Gene gene = new Gene();
-
-
             int modRotate = 0;
             int modPower = 0;
             // Write an action using Console.WriteLine()            
@@ -65,26 +62,6 @@ class Player
             modhSpeed = modhSpeed + System.Math.Cos(modRad) * modPower;
             modY = modY + modvSpeed + (System.Math.Sin(modRad) * modPower + Land.G) / 2;
             modvSpeed = modvSpeed + System.Math.Sin(modRad) * modPower + Land.G;
-            Console.Error.WriteLine(gene);
-            Console.Error.WriteLine("Landing in progress");
-            Console.Error.WriteLine(
-                String.Format(
-                    "X={0}m, Y={1}m, HSpeed={2}m/s VSpeed={3}m/s",
-                    (int)Math.Round(modX),
-                    (int)Math.Round(modY),
-                    (int)Math.Round(modhSpeed),
-                    (int)Math.Round(modvSpeed)
-                    )
-                );
-            Console.Error.WriteLine(
-                String.Format(
-                    "Fuel={0}l, Angle={1}°, Power={2} ({2}.0m/s2)",
-                    fuel - modPower,
-                    modRotate,
-                    modPower
-                    )
-                   );
-
 
             // rotate power. rotate is the desired rotation angle. power is the desired thrust power.            
             Console.WriteLine(modRotate + " " + modPower);
@@ -194,23 +171,63 @@ class Collision
 
 class Module
 {
+    public const int NB_POPULATION = 20;
     public const int MAX_ROTATE = 45;
     public const int MIN_ROTATE = -45;
     public const int MAX_POWER = 4;
     public const int MIN_POWER = 0;
     public int Power { get; set; }
     public int Rotate { get; set; }
-
     public double HSpeed { get; set; }
     public double VSpeed { get; set; }
     public double X { get; set; }
     public double Y { get; set; }
+    public int Fuel { get; set; }
+
+
+    private List<Chromosome> Population { get; set; }
+
+    public Module()
+    {
+
+    }
+
+    public void populate()
+    {
+        for (int p = 0; p < NB_POPULATION; p++)
+        {
+            Population.Add(new Chromosome());
+        }
+    }
+
+    public void Log()
+    {
+        Console.Error.WriteLine("Landing in progress");
+        Console.Error.WriteLine(
+            String.Format(
+                "X={0}m, Y={1}m, HSpeed={2}m/s VSpeed={3}m/s",
+                (int)Math.Round(X),
+                (int)Math.Round(Y),
+                (int)Math.Round(HSpeed),
+                (int)Math.Round(VSpeed)
+                )
+            );
+        Console.Error.WriteLine(
+            String.Format(
+                "Fuel={0}l, Angle={1}°, Power={2} ({2}.0m/s2)",
+                Fuel,
+                Rotate,
+                Power
+                )
+            );
+    }
 }
 
 class Chromosome
 {
-    public const int NB_GENE = 150;
-    public const int MUTATION = 5; // Proba de mutation en %
+    public const int MIN_NB_GENE = 40;
+    public const int MAX_NB_GENE = 150;
+    public const int MUTATION = 5; // Proba de mutation sur 100
     public List<Gene> Genes { get; set; }
 
     /// <summary>
@@ -218,14 +235,14 @@ class Chromosome
     /// - la distance avec la zone d'atterissage
     /// - la vitesse à la collision
     /// - l'angle à la collision
-    /// 
+    /// - la présence ou non d'une collision
     /// </summary>
     public double Score
     {
         get
         {
-
-        } 
+            return 0;
+        }
     }
 
     /// <summary>
@@ -237,9 +254,9 @@ class Chromosome
 
         int nbGene = 0;
 
-        while(nbGene < NB_GENE)
+        while (nbGene < MIN_NB_GENE)
         {
-            this.addGene(new Gene());
+            this.addGene();
             nbGene++;
         }
     }
@@ -264,16 +281,28 @@ class Chromosome
     public void mutate()
     {
         Random rand = new Random();
-        if (rand.Next(0,100) < MUTATION)
+        if (rand.Next(0, 100) < MUTATION)
         {
             Genes[rand.Next(0, Genes.Count)] = new Gene();
         }
     }
 
 
-    public void addGene(Gene gene)
+    /// <summary>
+    /// Add a new Gene
+    /// </summary>
+    public void addGene()
     {
-        Genes.Add(gene);
+        Genes.Add(new Gene());
+    }
+
+    /// <summary>
+    /// cut this Gene and those after
+    /// </summary>
+    /// <param name="gene"></param>
+    public void cut(Gene gene)
+    {
+        Genes.RemoveRange(Genes.FirstOrDefault(x => x == gene), Genes.Count);
     }
 }
 
